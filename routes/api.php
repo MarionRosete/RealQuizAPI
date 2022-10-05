@@ -2,9 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Models\User;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\AuthController;
 
 
 /*
@@ -18,17 +16,9 @@ use Illuminate\Support\Facades\Hash;
 |
 */
 
-Route::post('/login', function (Request $request) {
-   
-    $user = User::where('email', $request->email)->first();
- 
-    if (! $user || ! Hash::check($request->password, $user->password)) {
-        throw ValidationException::withMessages([
-            'msg' => ['The provided credentials are incorrect.'],
-        ]);
-    }
- 
-    return $user->createToken($request->device_name)->plainTextToken;
+Route::controller(AuthController::class)->group(function () {
+    Route::post('/login', 'login');
+    Route::post('/register','register');
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
