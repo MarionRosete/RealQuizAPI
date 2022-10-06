@@ -24,7 +24,7 @@ Route::controller(AuthController::class)->group(function () {
 
 
 Route::group(['middleware' => ['auth:sanctum']], function(){
-    Route::post('/qanda', [QandAController::class, 'index']);
+    Route::get('/qanda', [QandAController::class, 'index'])->middleware('teacher');
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
