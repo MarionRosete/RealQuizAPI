@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\QandAController;
+use App\Http\Controllers\VerifyEmailController;
 
 
 /*
@@ -23,9 +24,21 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 
-Route::group(['middleware' => ['auth:sanctum']], function(){
-    Route::get('/qanda', [QandAController::class, 'index'])->middleware('teacher');
+Route::group(['verified','middleware' => ['auth:sanctum','verified','teacher']], function(){
+    Route::get('/qanda', [QandAController::class, 'index']);
 });
+
+
+// Verify email
+Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
+    ->middleware(['signed', 'throttle:6,1'])
+    ->name('verification.verify');
+
+// Resend link to verify email
+Route::post('/email/verify/resend', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('message', 'Verification link sent!');
+})->middleware(['auth:api', 'throttle:6,1'])->name('verification.send');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

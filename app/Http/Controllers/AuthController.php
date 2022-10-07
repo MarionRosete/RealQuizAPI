@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
+
 
 class AuthController extends Controller
 {
@@ -15,19 +17,15 @@ class AuthController extends Controller
     public function register(Request $request)
     {
        
-        $request->validate([
+        $validInput = $request->validate([
             'email' => 'required|email|max:50|unique:users',
             'role'=>'required',
             'name'=>'required|max:50',
             'password' => 'required|min:8|confirmed'
         ]);
 
-        $user = User::create([
-            'name' => $request['name'],
-            'email'=> $request['email'],
-            'role'=>$request['role'],
-            'password' =>  bcrypt($request['password'])
-        ]);
+        $user = User::create($validInput);
+        event(new Registered($user));
        
         return ['token' =>  $user->createToken('auth_token')->plainTextToken, "user"=>$user];
 
