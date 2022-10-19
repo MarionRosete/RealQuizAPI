@@ -21,6 +21,8 @@ use App\Http\Controllers\VerifyEmailController;
 Route::controller(AuthController::class)->group(function () {
     Route::post('/login', 'login');
     Route::post('/register','register');
+    Route::post('/forgot_password','forgot')->name('password.reset');
+    Route::post('/change_forgotten_password/{token}','changeForgottenPassword');
 });
 
 

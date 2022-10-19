@@ -7,6 +7,11 @@ use App\Models\User;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Password;
+use DB;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+
 
 
 class AuthController extends Controller
@@ -45,6 +50,56 @@ class AuthController extends Controller
      
         return ['token'=>$user->createToken('auth_token')->plainTextToken, 'user'=>$user];
        
+    }
+
+    public function forgot(Request $request) {
+
+        $input = $request->validate(['email' => 'required|email']);
+        $registered_user = DB::table('users')->where('email', $request->email)->first();
+        if(!$registered_user){
+            throw ValidationException::withMessages([
+                'msg' => ['The provided credentials are incorrect.'],
+            ]);
+        }
+
+        $status = Password::sendResetLink($input);
+            return $status === "passwords.sent"
+                    ? response()->json(["msg" => 'Please check your email address for a reset password'])
+                    :response()->json(["msg" => 'Error request reset password, Please try again later']);
+      
+         
+    }
+
+    
+
+    public function changeForgottenPassword(Request $request){
+       
+
+       $emailWithResetToken =  DB::table('password_resets')->where('email', $request->email)->first();
+      
+        if(!$emailWithResetToken){
+            return response() -> json(["Request not found. please try again"]);
+        }
+
+
+        if(!Hash::check($request->token, $emailWithResetToken->token)){
+            return response() -> json(["Invalid token, please try again"]);
+        }
+
+        $user= User::where('email', $request->email)->first();
+      
+        if($user){
+
+            //save password
+            $user->password = bcrypt($request->password);
+            $user->save();
+
+            //delete reset password token
+            DB::delete('DELETE FROM password_resets WHERE token = ?', [$emailWithResetToken->token]);
+            
+            return response()->json(["user"=>$user]);
+        }
+    
     }
 
     
