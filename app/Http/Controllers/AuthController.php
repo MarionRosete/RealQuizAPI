@@ -65,7 +65,7 @@ class AuthController extends Controller
         $status = Password::sendResetLink($input);
             return $status === "passwords.sent"
                     ? response()->json(["msg" => 'Please check your email address for a reset password'])
-                    :response()->json(["msg" => 'Error request reset password, Please try again later']);
+                    :response()->json(["msg" => 'Error request reset password, Please try again later'],500);
       
          
     }
@@ -78,12 +78,12 @@ class AuthController extends Controller
        $emailWithResetToken =  DB::table('password_resets')->where('email', $request->email)->first();
       
         if(!$emailWithResetToken){
-            return response() -> json(["Request not found. please try again"]);
+            return response() -> json(["msg"=>"Request not found. please try again"],404);
         }
 
 
         if(!Hash::check($request->token, $emailWithResetToken->token)){
-            return response() -> json(["Invalid token, please try again"]);
+            return response() -> json(["Invalid token, please try again"],404);
         }
 
         $user= User::where('email', $request->email)->first();
