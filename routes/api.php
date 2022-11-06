@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\QandAController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\VerifyEmailController;
 
 
@@ -27,7 +28,9 @@ Route::controller(AuthController::class)->group(function () {
 
 
 Route::group(['verified','middleware' => ['auth:sanctum','verified','teacher']], function(){
-    Route::get('/qanda', [QandAController::class, 'index']);
+    Route::post('/create-qanda', [QandAController::class, 'create']);
+    Route::post('/create-quiz', [QuizController::class, 'create']);
+    Route::get('/logout',[AuthController::class, 'logout']);
 });
 
 

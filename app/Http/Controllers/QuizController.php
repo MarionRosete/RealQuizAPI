@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\QandA;
+use App\Http\Requests\StoreQuizRequest;
+use App\Http\Requests\UpdateQuizRequest;
+use App\Models\Quiz;
 use Illuminate\Http\Request;
 
-class QandAController extends Controller
+class QuizController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +16,6 @@ class QandAController extends Controller
      */
     public function index(Request $request)
     {
-        //
         return $request->user();
     }
 
@@ -26,25 +27,21 @@ class QandAController extends Controller
     public function create(Request $request)
     {
         $validInput = $request->validate([
-            'code' => 'required',
-            'question'=>'required',
-            'choice1' => 'required',
-            'choice2' => 'required',
-            'choice3' => 'required',
-            'choice4' => 'required',
-            'answer'=>'required',
+            'id' => 'required',
+            'name'=>'required|max:50',
+            'user' => 'required'
         ]);
-        $qanda = QandA::create($validInput);
-        return ["QandA"=>$qanda];
+        $quiz = Quiz::create($validInput);
+        return["quiz"=>$quiz];
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\StoreQuizRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreQuizRequest $request)
     {
         //
     }
@@ -52,10 +49,10 @@ class QandAController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\QandA  $qandA
+     * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function show(QandA $qandA)
+    public function show(Quiz $quiz)
     {
         //
     }
@@ -63,10 +60,10 @@ class QandAController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\QandA  $qandA
+     * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function edit(QandA $qandA)
+    public function edit(Quiz $quiz)
     {
         //
     }
@@ -74,11 +71,11 @@ class QandAController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\QandA  $qandA
+     * @param  \App\Http\Requests\UpdateQuizRequest  $request
+     * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, QandA $qandA)
+    public function update(UpdateQuizRequest $request, Quiz $quiz)
     {
         //
     }
@@ -86,10 +83,10 @@ class QandAController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\QandA  $qandA
+     * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function destroy(QandA $qandA)
+    public function destroy(Quiz $quiz)
     {
         //
     }
