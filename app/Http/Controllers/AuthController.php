@@ -58,7 +58,7 @@ class AuthController extends Controller
         $registered_user = DB::table('users')->where('email', $request->email)->first();
         if(!$registered_user){
             throw ValidationException::withMessages([
-                'msg' => ['The provided credentials are incorrect.'],
+                'msg' => ['We couldn\'t find an account with that email adress'],
             ]);
         }
 
