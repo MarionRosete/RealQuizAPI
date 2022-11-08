@@ -6,6 +6,8 @@ use App\Http\Requests\StoreQuizRequest;
 use App\Http\Requests\UpdateQuizRequest;
 use App\Models\Quiz;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class QuizController extends Controller
 {
@@ -43,7 +45,7 @@ class QuizController extends Controller
      */
     public function store(StoreQuizRequest $request)
     {
-        //
+       
     }
 
     /**
@@ -54,7 +56,9 @@ class QuizController extends Controller
      */
     public function show(Quiz $quiz)
     {
-        //
+        $id = Auth::id();
+        $quiz = Quiz::where('user',$id)->get();
+        return ["quiz"=>$quiz];
     }
 
     /**
