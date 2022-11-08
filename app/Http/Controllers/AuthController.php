@@ -28,13 +28,10 @@ class AuthController extends Controller
             'name'=>'required|max:50',
             'password' => 'required|min:8|confirmed'
         ]);
-
+        $validInput['password']=bcrypt($validInput['password']);
         $user = User::create($validInput);
         event(new Registered($user));
-       
         return ['token' =>  $user->createToken('auth_token')->plainTextToken, "user"=>$user];
-
-
     }
 
    
