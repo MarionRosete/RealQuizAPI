@@ -41,10 +41,10 @@ Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke
     ->name('verification.verify');
 
 // Resend link to verify email
-Route::post('/email/verify/resend', function (Request $request) {
+Route::get('/email/verify/resend', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
-    return back()->with('message', 'Verification link sent!');
-})->middleware(['auth:api', 'throttle:6,1'])->name('verification.send');
+    return ['message'=> 'Verification link sent!'];
+})->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.send');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
