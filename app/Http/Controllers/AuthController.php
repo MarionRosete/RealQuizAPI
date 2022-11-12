@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Password;
 use DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 
 
 
@@ -103,6 +105,11 @@ class AuthController extends Controller
             return response()->json(["user"=>$user]);
         }
     
+    }
+
+    public function user()
+    {
+        return $user = Auth::user();
     }
 
     

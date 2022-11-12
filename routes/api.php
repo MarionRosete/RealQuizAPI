@@ -28,10 +28,12 @@ Route::controller(AuthController::class)->group(function () {
 
 
 Route::group(['verified','middleware' => ['auth:sanctum','verified','teacher']], function(){
+    Route::get('/logout',[AuthController::class, 'logout']);
+    Route::get('/get-auth-user',[AuthController::class, 'user']);
     Route::post('/create-qanda', [QandAController::class, 'create']);
     Route::post('/create-quiz', [QuizController::class, 'create']);
     Route::get('/get-all-quiz',[QuizController::class, 'show']);
-    Route::get('/logout',[AuthController::class, 'logout']);
+   
 });
 
 
