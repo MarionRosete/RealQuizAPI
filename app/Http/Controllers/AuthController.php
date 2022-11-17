@@ -83,7 +83,7 @@ class AuthController extends Controller
        $emailWithResetToken =  DB::table('password_resets')->where('email', $request->email)->first();
       
         if(!$emailWithResetToken){
-            return response() -> json(["msg"=>"Request not found. please try again"],404);
+            return response() -> json(["msg"=>"Request not found. please try again requesting a reset password for your email"],404);
         }
 
 
