@@ -79,19 +79,12 @@ class AuthController extends Controller
 
     public function changeForgottenPassword(Request $request){
        
+        $validInput = $request->validate([
+            'password' => 'required|min:8|confirmed'
+        ]);
+   
 
-       $emailWithResetToken =  DB::table('password_resets')->where('email', $request->email)->first();
-      
-        if(!$emailWithResetToken){
-            return response() -> json(["msg"=>"Request not found. please try again requesting a reset password for your email"],404);
-        }
-
-
-        if(!Hash::check($request->token, $emailWithResetToken->token)){
-            return response() -> json(["Invalid token, please try again"],404);
-        }
-
-        $user= User::where('email', $request->email)->first();
+        $user = User::where('email', $validInput->email)->first();
       
         if($user){
 
@@ -105,6 +98,27 @@ class AuthController extends Controller
             return response()->json(["user"=>$user]);
         }
     
+    }
+
+    public function checkEmailResetPassword(Request $request) {
+        $email = $request->email;
+   
+
+        $emailWithResetToken =  DB::table('password_resets')->where('email', $email)->first();
+
+       
+      
+        if(!$emailWithResetToken){
+            return response() -> json(["msg"=>"Request not found. please try again requesting a reset password for your email"],404);
+        }
+
+
+        if(!Hash::check($request->token, $emailWithResetToken->token)){
+            return response() -> json(["Invalid token, please try again"],404);
+        }
+
+        return response() -> json(["status"=>"success"]);
+         
     }
 
     public function user()
