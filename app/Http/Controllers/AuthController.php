@@ -84,7 +84,7 @@ class AuthController extends Controller
         ]);
    
 
-        $user = User::where('email', $validInput->email)->first();
+        $user = User::where('email', $request->email)->first();
       
         if($user){
 
@@ -93,23 +93,20 @@ class AuthController extends Controller
             $user->save();
 
             //delete reset password token
-            DB::delete('DELETE FROM password_resets WHERE token = ?', [$emailWithResetToken->token]);
+            DB::delete('DELETE FROM password_resets WHERE email = ?', [$request->email]);
             
-            return response()->json(["user"=>$user]);
+            return response()->json(["status"=>"Successfully reset password"]);
         }
     
     }
 
     public function checkEmailResetPassword(Request $request) {
         $email = $request->email;
-   
-
         $emailWithResetToken =  DB::table('password_resets')->where('email', $email)->first();
-
-       
-      
         if(!$emailWithResetToken){
-            return response() -> json(["msg"=>"Request not found. please try again requesting a reset password for your email"],404);
+            return response() -> json(
+                ["msg"=>"Request not found. please request a reset password for your email"]
+            ,404);
         }
 
 
