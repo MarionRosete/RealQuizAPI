@@ -12,6 +12,8 @@ use DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
+
 
 
 
@@ -53,7 +55,7 @@ class AuthController extends Controller
     
     public function logout(Request $request){
        
-       return $request->user()->currentAccessToken()->delete();
+        $request->user()->currentAccessToken()->delete();
        
     }
 
