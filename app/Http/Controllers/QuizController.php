@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateQuizRequest;
 use App\Models\Quiz;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 
 class QuizController extends Controller
@@ -29,10 +30,12 @@ class QuizController extends Controller
     public function create(Request $request)
     {
         $validInput = $request->validate([
-            'id' => 'required',
             'name'=>'required|max:50',
-            'user' => 'required'
+            'description'=>'required|max:100',
+            'owner' => 'required'
         ]);
+
+        $validInput['id']=Str::uuid();
         $quiz = Quiz::create($validInput);
         return["quiz"=>$quiz];
     }
@@ -57,7 +60,7 @@ class QuizController extends Controller
     public function show(Quiz $quiz)
     {
         $id = Auth::id();
-        $quiz = Quiz::where('user',$id)->get();
+        $quiz = Quiz::where('owner',$id)->get();
         return ["quiz"=>$quiz];
     }
 

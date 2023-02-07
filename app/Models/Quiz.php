@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Quiz extends Model
 {
     use HasFactory;
+    public $incrementing = false;
     protected $fillable = [
         'id',
         'name',
-        'user',
+        'owner',
     ];
 }
