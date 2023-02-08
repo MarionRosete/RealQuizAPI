@@ -12,6 +12,7 @@ class Quiz extends Model
     protected $fillable = [
         'id',
         'name',
+        'description',
         'owner',
     ];
 }

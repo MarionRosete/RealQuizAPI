@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('quizzes', function (Blueprint $table) {
             $table->uuid('id');
             $table->string('name');
+            $table->string('description');
             $table->integer('owner');
             $table->timestamps();
         });
