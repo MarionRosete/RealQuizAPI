@@ -25,17 +25,12 @@ class QandAController extends Controller
      */
     public function create(Request $request)
     {
-        $validInput = $request->validate([
-            'code' => 'required',
-            'question'=>'required',
-            'choice1' => 'required',
-            'choice2' => 'required',
-            'choice3' => 'required',
-            'choice4' => 'required',
-            'answer'=>'required',
-        ]);
-        $qanda = QandA::create($validInput);
-        return ["QandA"=>$qanda];
+        $data = $request->all();
+        foreach ($data as $key ) {
+            QandA::create($key);
+        }
+       
+        return ["msg"=>"success"];
     }
 
     /**
