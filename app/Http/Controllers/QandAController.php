@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\QandA;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class QandAController extends Controller
 {
@@ -29,8 +30,13 @@ class QandAController extends Controller
         foreach ($data as $key ) {
             QandA::create($key);
         }
-       
         return ["msg"=>"success"];
+    }
+
+    public function get(Request $request){
+        $code = $request->code;
+         $qanda = DB::table('qand_a_s')->where('code',$code)->get();
+        return $qanda;
     }
 
     /**
