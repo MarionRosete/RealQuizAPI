@@ -28,7 +28,16 @@ class QandAController extends Controller
     {
         $data = $request->all();
         foreach ($data as $key ) {
-            QandA::create($key);
+           $id=$key['id'];
+           $qanda =  QandA::findOrNew($id);
+           $qanda->code = $key['code'];
+           $qanda->question = $key['question'];
+           $qanda->choice1 = $key['choice1'];
+           $qanda->choice2 = $key['choice2'];
+           $qanda->choice3 = $key['choice3'];
+           $qanda->choice4 = $key['choice4'];
+           $qanda->answer = $key['answer'];
+           $qanda->save();
         }
         return ["msg"=>"success"];
     }
