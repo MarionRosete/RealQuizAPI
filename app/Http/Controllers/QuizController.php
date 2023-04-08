@@ -94,7 +94,7 @@ class QuizController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function destroy(Request $request)
+     public function delete(Request $request)
      {
          //
          $id=$request->id;
