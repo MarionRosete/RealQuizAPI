@@ -82,9 +82,14 @@ class QuizController extends Controller
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateQuizRequest $request, Quiz $quiz)
+    public function update(Request $request)
     {
-        //
+        $id=$request->id;
+         $quiz = Quiz::findOrFail($id);
+         $quiz->name = $request->name;
+         $quiz->description = $request->description;
+         $quiz->save();
+         return ['quiz'=>$quiz, 'msg'=>'Successfully updated' . $quiz->name];
     }
 
     /**
