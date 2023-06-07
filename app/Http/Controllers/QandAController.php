@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\QandA;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class QandAController extends Controller
 {
@@ -23,9 +24,28 @@ class QandAController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $data = $request->all();
+        foreach ($data as $key ) {
+           $id=$key['id'];
+           $qanda =  QandA::findOrNew($id);
+           $qanda->code = $key['code'];
+           $qanda->question = $key['question'];
+           $qanda->choice1 = $key['choice1'];
+           $qanda->choice2 = $key['choice2'];
+           $qanda->choice3 = $key['choice3'];
+           $qanda->choice4 = $key['choice4'];
+           $qanda->answer = $key['answer'];
+           $qanda->save();
+        }
+        return ["msg"=>"success"];
+    }
+
+    public function get(Request $request){
+        $code = $request->code;
+         $qanda = DB::table('qand_a_s')->where('code',$code)->get();
+        return $qanda;
     }
 
     /**

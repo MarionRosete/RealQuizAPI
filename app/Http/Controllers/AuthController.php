@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Password;
 use DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
+
+
 
 
 
@@ -28,13 +32,10 @@ class AuthController extends Controller
             'name'=>'required|max:50',
             'password' => 'required|min:8|confirmed'
         ]);
-
+        $validInput['password']=bcrypt($validInput['password']);
         $user = User::create($validInput);
         event(new Registered($user));
-       
         return ['token' =>  $user->createToken('auth_token')->plainTextToken, "user"=>$user];
-
-
     }
 
    
@@ -49,6 +50,12 @@ class AuthController extends Controller
         }
      
         return ['token'=>$user->createToken('auth_token')->plainTextToken, 'user'=>$user];
+       
+    }
+    
+    public function logout(Request $request){
+       
+        $request->user()->currentAccessToken()->delete();
        
     }
 
@@ -74,19 +81,12 @@ class AuthController extends Controller
 
     public function changeForgottenPassword(Request $request){
        
+        $validInput = $request->validate([
+            'password' => 'required|min:8|confirmed'
+        ]);
+   
 
-       $emailWithResetToken =  DB::table('password_resets')->where('email', $request->email)->first();
-      
-        if(!$emailWithResetToken){
-            return response() -> json(["msg"=>"Request not found. please try again"],404);
-        }
-
-
-        if(!Hash::check($request->token, $emailWithResetToken->token)){
-            return response() -> json(["Invalid token, please try again"],404);
-        }
-
-        $user= User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
       
         if($user){
 
@@ -95,11 +95,34 @@ class AuthController extends Controller
             $user->save();
 
             //delete reset password token
-            DB::delete('DELETE FROM password_resets WHERE token = ?', [$emailWithResetToken->token]);
+            DB::delete('DELETE FROM password_resets WHERE email = ?', [$request->email]);
             
-            return response()->json(["user"=>$user]);
+            return response()->json(["status"=>"Successfully reset password"]);
         }
     
+    }
+
+    public function checkEmailResetPassword(Request $request) {
+        $email = $request->email;
+        $emailWithResetToken =  DB::table('password_resets')->where('email', $email)->first();
+        if(!$emailWithResetToken){
+            return response() -> json(
+                ["msg"=>"Request not found. please request a reset password for your email"]
+            ,404);
+        }
+
+
+        if(!Hash::check($request->token, $emailWithResetToken->token)){
+            return response() -> json(["Invalid token, please try again"],404);
+        }
+
+        return response() -> json(["status"=>"success"]);
+         
+    }
+
+    public function user()
+    {
+        return $user = Auth::user();
     }
 
     

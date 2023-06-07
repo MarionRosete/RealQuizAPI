@@ -5,16 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class QandA extends Model
+class Quiz extends Model
 {
     use HasFactory;
+    public $incrementing = false;
     protected $fillable = [
-        'code',
-        'question',
-        'choice1',
-        'choice2',
-        'choice3',
-        'choice4',
-        'answer'
+        'id',
+        'name',
+        'description',
+        'owner',
     ];
 }
