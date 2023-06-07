@@ -35,7 +35,7 @@ Route::group(['verified','middleware' => ['auth:sanctum','verified','teacher']],
     Route::get('/get-qanda/{code}', [QandAController::class, 'get']);
     Route::post('/create-quiz', [QuizController::class, 'create']);
     Route::get('/get-all-quiz',[QuizController::class, 'show']);
-    Route::post('/update-quiz/{id}',[QuizController::class, 'update']);
+    Route::post('/update-quiz',[QuizController::class, 'update']);
     Route::get('/delete-quiz/{id}',[QuizController::class, 'delete']);
    
 });
