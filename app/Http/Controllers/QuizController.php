@@ -30,8 +30,8 @@ class QuizController extends Controller
     public function create(Request $request)
     {
         $validInput = $request->validate([
-            'name'=>'required|max:50',
-            'description'=>'required|max:100',
+            'name'=>'required|max:100',
+            'description'=>'required|max:255',
             'owner' => 'required'
         ]);
 
